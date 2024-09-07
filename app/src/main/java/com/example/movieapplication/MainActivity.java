@@ -6,10 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.movieapplication.adapters.StreamingMoviesAdapter;
 import com.example.movieapplication.adapters.TopMoviesAdapter;
 import com.example.movieapplication.apiClients.RetrofitInstance;
 import com.example.movieapplication.apiInterfaces.TopMoviesApiInterface;
 import com.example.movieapplication.databinding.ActivityMainBinding;
+import com.example.movieapplication.models.Movie;
+import com.example.movieapplication.models.StreamingMoviesResponse;
 import com.example.movieapplication.models.TopMoviesResponse;
 
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     ArrayList<TopMoviesResponse.Datum>movies;
     TopMoviesApiInterface topMoviesApiInterface;
+    List<StreamingMoviesResponse.Edge>pagerList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,36 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+        //viewpager logic
+        topMoviesApiInterface.getStreamingMovies("us").enqueue(new Callback<StreamingMoviesResponse>() {
+            @Override
+            public void onResponse(Call<StreamingMoviesResponse> call, Response<StreamingMoviesResponse> response) {
+                if(response.isSuccessful() && response.body()!=null)
+                {
+                    try{
+                        pagerList = response.body().data.get(0).edges;
+                        StreamingMoviesAdapter streamingMoviesAdapter = new StreamingMoviesAdapter(MainActivity.this,
+                                pagerList);
+                        binding.streamingPager.setAdapter(streamingMoviesAdapter);
+
+                    }catch (Exception e)
+                    {
+                        Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<StreamingMoviesResponse> call, Throwable throwable) {
+                Toast.makeText(MainActivity.this, throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 

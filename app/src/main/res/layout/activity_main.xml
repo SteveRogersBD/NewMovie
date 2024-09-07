@@ -8,7 +8,14 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/streamingRecycler"
         />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/streamingPager"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/streamingRecycler"/>
 </RelativeLayout>
