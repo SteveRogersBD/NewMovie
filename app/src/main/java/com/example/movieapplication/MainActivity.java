@@ -8,12 +8,14 @@ import android.widget.Toast;
 
 import com.example.movieapplication.adapters.StreamingMoviesAdapter;
 import com.example.movieapplication.adapters.TopMoviesAdapter;
+import com.example.movieapplication.adapters.UpComingMoviesAdapter;
 import com.example.movieapplication.apiClients.RetrofitInstance;
 import com.example.movieapplication.apiInterfaces.TopMoviesApiInterface;
 import com.example.movieapplication.databinding.ActivityMainBinding;
 import com.example.movieapplication.models.Movie;
 import com.example.movieapplication.models.StreamingMoviesResponse;
 import com.example.movieapplication.models.TopMoviesResponse;
+import com.example.movieapplication.models.UpComingMoviesResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +30,14 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<TopMoviesResponse.Datum>movies;
     TopMoviesApiInterface topMoviesApiInterface;
     List<StreamingMoviesResponse.Edge>pagerList;
+    List<UpComingMoviesResponse.Entry>upList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         movies = new ArrayList<>();
+        upList = new ArrayList<>();
 
 
         topMoviesApiInterface = RetrofitInstance.topMovRetrofit.create(TopMoviesApiInterface.class);
@@ -98,6 +102,40 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<StreamingMoviesResponse> call, Throwable throwable) {
+                Toast.makeText(MainActivity.this, throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        //upcomingmovies logic
+
+        topMoviesApiInterface.getUpComingMovies("us").enqueue(new Callback<UpComingMoviesResponse>() {
+            @Override
+            public void onResponse(Call<UpComingMoviesResponse> call, Response<UpComingMoviesResponse> response) {
+                if(response.isSuccessful() && response.body()!=null)
+                {
+                    try{
+                        //upList = response.body().message.get(0).entries;
+                        for(UpComingMoviesResponse.Message m:response.body().message)
+                        {
+                            upList.addAll(m.entries);
+                        }
+                        UpComingMoviesAdapter upComingMoviesAdapter = new UpComingMoviesAdapter(MainActivity.this,upList);
+                        binding.upComingRecycler.setAdapter(upComingMoviesAdapter);
+                        LinearLayoutManager lm2 = new LinearLayoutManager(MainActivity.this,
+                                LinearLayoutManager.HORIZONTAL,false);
+                        binding.upComingRecycler.setLayoutManager(lm2);
+
+
+                    }catch (Exception e)
+                    {
+                        Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UpComingMoviesResponse> call, Throwable throwable) {
                 Toast.makeText(MainActivity.this, throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });

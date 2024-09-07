@@ -18,4 +18,11 @@
         android:id="@+id/streamingPager"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/streamingRecycler"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/upComingRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/streamingPager"
+        android:layout_marginTop="20dp"/>
 </RelativeLayout>
