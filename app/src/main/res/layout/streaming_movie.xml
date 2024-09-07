@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#050505">
+    android:background="#050505"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/poster"
+                android:id="@+id/poster_final"
                 android:layout_width="200dp"
                 android:layout_height="350dp"
                 android:background="@color/black"
@@ -31,7 +32,7 @@
                 app:layout_constraintVertical_bias="1.0" />
 
             <TextView
-                android:id="@+id/tv_rating"
+                android:id="@+id/tv_rating_final"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="17dp"
@@ -57,7 +58,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/tv_rating"
+                app:layout_constraintBottom_toTopOf="@+id/tv_rating_final"
                 app:layout_constraintEnd_toEndOf="parent" />
 
 

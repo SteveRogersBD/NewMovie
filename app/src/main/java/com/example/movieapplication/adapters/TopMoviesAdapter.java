@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieapplication.R;
-import com.example.movieapplication.models.Movie;
 import com.example.movieapplication.models.TopMoviesResponse;
 import com.squareup.picasso.Picasso;
 
@@ -29,15 +28,19 @@ public class TopMoviesAdapter extends RecyclerView.Adapter<TopMoviesAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.streaming_movie,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.final_layout,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TopMoviesResponse.Datum movie = movies.get(position);
-        holder.tvRating.setText(movie.ratingsSummary.aggregateRating+"");
+        holder.tvRating.setText(movie.ratingsSummary.aggregateRating == 0.0 ? "?":
+                movie.ratingsSummary.aggregateRating+"");
+
         holder.tvName.setText(movie.originalTitleText.text);
+        holder.tvRuntime.setText((movie.titleRuntime.seconds/60)+" min");
+        holder.tvReleaseYear.setText(movie.releaseYear.year+"");
         //holder.moviePoster.setImageResource(movie.getImage());
         Picasso.get().load(movie.primaryImage.imageUrl).into(holder.moviePoster);
     }
@@ -49,13 +52,15 @@ public class TopMoviesAdapter extends RecyclerView.Adapter<TopMoviesAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView tvRating, tvName;
+        TextView tvRating, tvName, tvRuntime, tvReleaseYear;
         ImageView moviePoster;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvRating=itemView.findViewById(R.id.tv_rating);
-            tvName=itemView.findViewById(R.id.tv_moviename);
-            moviePoster=itemView.findViewById(R.id.poster);
+            tvRating=itemView.findViewById(R.id.tv_rating_final);
+            tvName=itemView.findViewById(R.id.tv_name_final);
+            moviePoster=itemView.findViewById(R.id.poster_final);
+            tvRuntime = itemView.findViewById(R.id.tv_runtime_final);
+            tvReleaseYear = itemView.findViewById(R.id.tv_releaseyear_final);
 
         }
     }
